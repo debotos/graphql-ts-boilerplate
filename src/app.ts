@@ -14,6 +14,7 @@ import resolvers from './GraphQL/resolvers'
 import models from './GraphQL/models'
 /* Others */
 import { LoggerStream } from './common/logger'
+import getMe from './GraphQL/utils/getMe'
 
 class App {
 	public app: express.Application
@@ -70,9 +71,22 @@ const app = new App().app
 const graphqlServer = new ApolloServer({
 	typeDefs: schema,
 	resolvers,
-	context: async () => ({
+	formatError: error => {
+		// remove the internal sequelize(ORM) error message
+		// leave only the important validation error
+		const message = error.message
+			.replace('SequelizeValidationError: ', '')
+			.replace('Validation error: ', '')
+
+		return {
+			...error,
+			message
+		}
+	},
+	context: async ({ req }) => ({
 		models,
-		me: await models.User.findByLogin('debotos')
+		me: await getMe(req),
+		jwtSecret: process.env.JWT_SECRET
 	})
 })
 

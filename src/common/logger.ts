@@ -63,7 +63,11 @@ const logger = createLogger({
 export class LoggerStream {
 	write(message: string) {
 		/* Filter out the graphql entries */
-		if (!message.includes('POST /graphql 200')) {
+		if (process.env.NODE_ENV === 'development') {
+			if (!message.includes('POST /graphql 200')) {
+				logger.info(message.substring(0, message.lastIndexOf('\n')))
+			}
+		} else {
 			logger.info(message.substring(0, message.lastIndexOf('\n')))
 		}
 	}

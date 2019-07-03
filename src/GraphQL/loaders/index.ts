@@ -2,6 +2,9 @@ const createUsersWithMessages = async (models: any) => {
 	await models.User.create(
 		{
 			username: 'debotos',
+			email: 'debotosdas@gmail.com',
+			password: 'passmedeb',
+			role: 'ADMIN',
 			messages: [
 				{
 					text: 'Published the boilerplate'
@@ -16,6 +19,9 @@ const createUsersWithMessages = async (models: any) => {
 	await models.User.create(
 		{
 			username: 'ripon',
+			email: 'ripondas49@gmail.com',
+			password: 'passmedeb',
+			role: 'ADMIN',
 			messages: [
 				{
 					text: 'Happy to see ...'
