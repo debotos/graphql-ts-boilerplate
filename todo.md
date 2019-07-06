@@ -1,1 +1,1 @@
-1. pagination
+1. Batching and Caching in GraphQL

@@ -1,6 +1,7 @@
 import Sequelize from 'sequelize'
 import { combineResolvers } from 'graphql-resolvers'
 
+import pubsub, { EVENTS } from '../subscription'
 import { isAuthenticated, isMessageOwner } from './middleware/authorization'
 
 /* 
@@ -66,10 +67,16 @@ export default {
 		createMessage: combineResolvers(
 			isAuthenticated,
 			async (_: any, { text }: any, { me, models }: any) => {
-				return await models.Message.create({
+				const message = await models.Message.create({
 					text,
 					userId: me.id
 				})
+
+				pubsub.publish(EVENTS.MESSAGE.CREATED, {
+					messageCreated: { message }
+				})
+
+				return message
 			}
 		),
 
@@ -85,6 +92,12 @@ export default {
 	Message: {
 		user: async (message: any, __: any, { models }: any) => {
 			return await models.User.findByPk(message.userId)
+		}
+	},
+
+	Subscription: {
+		messageCreated: {
+			subscribe: () => pubsub.asyncIterator(EVENTS.MESSAGE.CREATED)
 		}
 	}
 }

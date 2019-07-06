@@ -1,5 +1,6 @@
 import express = require('express')
 import * as bodyParser from 'body-parser'
+import http from 'http'
 import cors from 'cors'
 import morgan from 'morgan'
 import helmet from 'helmet'
@@ -70,6 +71,7 @@ const app = new App().app
 /* Creating a GraphQL Server */
 const graphqlServer = new ApolloServer({
 	typeDefs: schema,
+	// @ts-ignore: 'resolvers' should accept 'Array<IResolvers>'
 	resolvers,
 	formatError: error => {
 		// remove the internal sequelize(ORM) error message
@@ -83,14 +85,29 @@ const graphqlServer = new ApolloServer({
 			message
 		}
 	},
-	context: async ({ req }) => ({
-		models,
-		me: await getMe(req),
-		jwtSecret: process.env.JWT_SECRET
-	})
+	context: async ({ req, connection }: any) => {
+		/* HTTP requests come with a req and res object, but the subscription comes with a connection object */
+		/* For Subscription Case */
+		if (connection) {
+			return { models }
+		}
+		/* Regular Case */
+		if (req) {
+			const me = await getMe(req)
+			return {
+				models,
+				me,
+				jwtSecret: process.env.JWT_SECRET
+			}
+		}
+
+		return
+	}
 })
 
+export const httpServer = http.createServer(app) /* For Apollo Server Subscription Setup */
 /* Putting RESTful Express Server in it. So that it can work together */
-graphqlServer.applyMiddleware({ app })
+graphqlServer.applyMiddleware({ app }) /* Default open in PORT 5000 */
+graphqlServer.installSubscriptionHandlers(httpServer)
 
 export default app
