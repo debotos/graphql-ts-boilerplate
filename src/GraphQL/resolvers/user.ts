@@ -4,7 +4,7 @@ import { AuthenticationError, UserInputError } from 'apollo-server'
 
 import { isAdmin } from './middleware/authorization'
 
-const expiresTime = '30m'
+const expiresTime = '60m'
 
 const createToken = async (user: any, secret: string, expiresIn: string) => {
 	const { id, email, username, role } = user

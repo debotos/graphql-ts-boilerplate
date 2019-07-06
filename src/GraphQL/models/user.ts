@@ -1,7 +1,14 @@
 import bcrypt from 'bcrypt'
+import uuid from 'uuid/v4'
 
 const user = (sequelize: any, DataTypes: any) => {
 	const User = sequelize.define('user', {
+		id: {
+			allowNull: false,
+			primaryKey: true,
+			type: DataTypes.UUID,
+			defaultValue: DataTypes.UUIDV4
+		},
 		username: {
 			type: DataTypes.STRING,
 			unique: true,
@@ -52,6 +59,7 @@ const user = (sequelize: any, DataTypes: any) => {
 
 	User.beforeCreate(async (user: any) => {
 		user.password = await user.generatePasswordHash()
+		user.id = uuid()
 	})
 
 	User.prototype.generatePasswordHash = async function() {
