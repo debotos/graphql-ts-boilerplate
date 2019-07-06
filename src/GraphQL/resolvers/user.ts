@@ -64,6 +64,7 @@ export default {
 	User: {
 		messages: async (user: any, __: any, { models }: any) => {
 			return await models.Message.findAll({
+				order: [['createdAt', 'DESC']],
 				where: {
 					userId: user.id
 				}
