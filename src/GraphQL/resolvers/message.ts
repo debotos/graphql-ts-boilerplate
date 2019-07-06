@@ -4,8 +4,8 @@ import { isAuthenticated, isMessageOwner } from './middleware/authorization'
 
 export default {
 	Query: {
-		messages: async (_: any, __: any, { models }: any) => {
-			return await models.Message.findAll()
+		messages: async (_: any, { offset = 0, limit = 100 }: any, { models }: any) => {
+			return await models.Message.findAll({ offset, limit })
 		},
 		message: async (_: any, { id }: any, { models }: any) => {
 			return await models.Message.findByPk(id)
