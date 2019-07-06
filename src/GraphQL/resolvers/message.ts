@@ -7,8 +7,12 @@ import { isAuthenticated, isMessageOwner } from './middleware/authorization'
 	The client shouldn’t care about the format or the actual value of the cursor, 
 	so we’ll ask the cursor with a hash function that uses a base64 encoding 
 */
-const toCursorHash = (string: string) => Buffer.from(string).toString('base64')
-const fromCursorHash = (string: string) => Buffer.from(string, 'base64').toString('ascii')
+const toCursorHash = (string: string) => {
+	return Buffer.from(string).toString('base64')
+}
+const fromCursorHash = (string: string) => {
+	return Buffer.from(string, 'base64').toString('ascii')
+}
 
 export default {
 	Query: {
@@ -17,6 +21,7 @@ export default {
 				The first page only retrieves the most recent messages in the list, 
 				so you can use the creation date of the last message as a cursor for the next page of messages.
 			*/
+
 			const messages = await models.Message.findAll({
 				order: [
 					['createdAt', 'DESC']
@@ -44,9 +49,11 @@ export default {
 					*/
 					hasNextPage,
 					/* The GraphQL client receives a hashed endCursor field */
-					endCursor: edges[edges.length - 1]
-						? toCursorHash(edges[edges.length - 1].createdAt.toString())
-						: "Not available. You are end of the page!"
+					endCursor: hasNextPage
+						? toCursorHash(
+								edges[edges.length - 1].createdAt.toISOString()
+						  ) /* toISOString() is a moment.js function */
+						: 'Not available. You are end of the page!'
 				}
 			}
 		},
