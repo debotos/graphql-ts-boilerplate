@@ -13,6 +13,7 @@ import setupRESTfulRoutes from './RESTful/routes'
 import schema from './GraphQL/schema'
 import resolvers from './GraphQL/resolvers'
 import models from './GraphQL/models'
+import * as loaders from './GraphQL/loaders'
 /* Others */
 import { LoggerStream } from './common/logger'
 import getMe from './GraphQL/utils/getMe'
@@ -97,7 +98,8 @@ const graphqlServer = new ApolloServer({
 			return {
 				models,
 				me,
-				jwtSecret: process.env.JWT_SECRET
+				jwtSecret: process.env.JWT_SECRET,
+				loaders: { user: loaders.userLoader }
 			}
 		}
 

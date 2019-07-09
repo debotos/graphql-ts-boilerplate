@@ -90,8 +90,8 @@ export default {
 	},
 
 	Message: {
-		user: async (message: any, __: any, { models }: any) => {
-			return await models.User.findByPk(message.userId)
+		user: async (message: any, __: any, { loaders }: any) => {
+			return await loaders.user.load(message.userId)
 		}
 	},
 
