@@ -27,4 +27,12 @@ POSTGRES_DATABASE_URL=
 JWT_SECRET=mysupersecretkey
 ```
 
-Application is checking for an 'x-token' key value pair in the HTTP header to consider as a Authenticate User.
+Application will check for an 'x-token' key value pair in the HTTP header to consider as a Authenticate User.
+
+## Heroku Deploy
+
+1. heroku create name-of-the-app
+2. heroku addons:create heroku-postgresql:hobby-dev
+3. heroku config:set NPM_CONFIG_PRODUCTION=false YARN_PRODUCTION=false [To keep dev dependencies]
+4. Go to the heroku dashboard settings and copy DATABASE_URL as POSTGRES_DATABASE_URL and set up other variable as above
+5. git push hroku master

@@ -7,9 +7,9 @@
 	"license": "LGPL-3.0-or-later",
 	"scripts": {
 		"dev": "ts-node-dev --respawn --transpileOnly ./src/server.ts",
-		"prod": "tsc && node build/server.js",
+		"prod": "tsc && node ./build/server.js",
 		"build": "tsc",
-		"start": "node build/index.js",
+		"start": "node ./build/index.js",
 		"postinstall": "npm run build"
 	},
 	"dependencies": {
