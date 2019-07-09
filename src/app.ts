@@ -71,6 +71,8 @@ const app = new App().app
 
 /* Creating a GraphQL Server */
 const graphqlServer = new ApolloServer({
+	introspection: true /* To Solve, GraphQL schema is not available in GraphQL Playground for application in production */,
+	playground: true,
 	typeDefs: schema,
 	// @ts-ignore: 'resolvers' should accept 'Array<IResolvers>'
 	resolvers,

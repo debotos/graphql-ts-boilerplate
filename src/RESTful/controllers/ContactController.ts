@@ -14,7 +14,7 @@ export class ContactController {
 		})
 	}
 
-	public getContacts(req: Request, res: Response) {
+	public getContacts(_: any, res: Response) {
 		Contact.find({}, (err, contact) => {
 			if (err) {
 				res.send(err)

@@ -8,6 +8,8 @@ Fill it with -
 
 ```
 # .env
+
+# Set it to 'production' when deploying
 NODE_ENV=development
 PORT=5000
 
@@ -18,6 +20,9 @@ MONGO_DB_URI=mongodb://localhost/graphql-ts-boilerplate
 POSTGRES_DATABASE=graphql-ts-boilerplate
 POSTGRES_DATABASE_USER=postgres
 POSTGRES_DATABASE_PASSWORD=
+
+# Fill it only in production time
+POSTGRES_DATABASE_URL=
 
 JWT_SECRET=mysupersecretkey
 ```
