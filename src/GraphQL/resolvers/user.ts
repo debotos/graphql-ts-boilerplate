@@ -2,7 +2,8 @@ import jwt from 'jsonwebtoken'
 import { combineResolvers } from 'graphql-resolvers'
 import { AuthenticationError, UserInputError } from 'apollo-server'
 
-import { isAdmin } from './middleware/authorization'
+import { isAdmin, isAuthenticated } from './middleware/authorization'
+import { uploadOneImage } from '../utils/cloudinary'
 
 const expiresTime: string = process.env.JWT_TIMEOUT || '60m'
 
@@ -76,6 +77,35 @@ export default {
 
 			return { token: createToken(user, jwtSecret, expiresTime) }
 		},
+
+		changeProfileImage: combineResolvers(
+			isAuthenticated,
+			async (_: any, { image }: any, { me, models }: any) => {
+				/*
+					const { createReadStream, filename, mimetype, encoding }: any = await image
+					const stream = createReadStream()
+					stream: The upload stream manages streaming the file(s) to a filesystem or any storage
+									location of your choice. e.g. S3, Azure, Cloudinary, e.t.c.
+					filename: The name of the uploaded file(s).
+					mimetype: The MIME type of the file(s) such as text/plain, application/octet-stream, etc.
+					encoding: The file encoding such as UTF-8.
+				*/
+
+				/* 1. Validate file metadata. */
+				/* 2. Stream file contents into cloud storage(Here, cloudinary.com): https://nodejs.org/api/stream.html */
+				/* 3. Save the uploaded file response in your DB. */
+
+				const { createReadStream }: any = await image
+				const stream = createReadStream()
+				const path = `${me.role}/${me.username}`
+				const response = await uploadOneImage(stream, path)
+				if (!response) {
+					throw new Error('Failed to upload profile image.')
+				}
+				await models.User.update({ image: response }, { where: { id: me.id } })
+				return response
+			}
+		),
 
 		deleteUser: combineResolvers(isAdmin, async (_: any, { id }: any, { models }: any) => {
 			return await models.User.destroy({

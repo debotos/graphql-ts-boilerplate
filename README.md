@@ -9,27 +9,34 @@ Fill it with -
 ```
 # .env
 
+PROJECT_NAME=graphql-ts-boilerplate
 # Set it to 'production' when deploying
 NODE_ENV=development
+# Set the postgres database url when deploying
+POSTGRES_DATABASE_URL=
+# Optional, Just for local development
 PORT=5000
+
 # Set it to true to create a role: 'ADMIN' account else leave blank
 # Use it after hosting the app to create the first Admin account
 # Without this env variable no one can create admin account
 ADMIN_MODE=
 
-# leave it blank/empty if you don't want to use mongo DB
-USE_MONGO_DB=true
+# leave it blank if you don't want to use mongo DB
+USE_MONGO_DB=
 MONGO_DB_URI=mongodb://localhost/graphql-ts-boilerplate
 
 POSTGRES_DATABASE=graphql-ts-boilerplate
 POSTGRES_DATABASE_USER=postgres
 POSTGRES_DATABASE_PASSWORD=
 
-# Fill it only in production time
-POSTGRES_DATABASE_URL=
-
 JWT_SECRET=mysupersecretkey
 JWT_TIMEOUT=60m
+
+# To manage media assets (https://cloudinary.com/)
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ```
 
 Application will check for an 'x-token' key value pair in the HTTP header to consider as a Authenticate User.

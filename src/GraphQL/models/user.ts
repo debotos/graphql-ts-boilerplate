@@ -43,6 +43,10 @@ const user = (sequelize: any, DataTypes: any) => {
 					msg: "Must be one of ['ADMIN', 'PARTNER', 'CONSUMER']"
 				}
 			}
+		},
+		image: {
+			type: DataTypes.JSON,
+			allowNull: true
 		}
 	})
 
