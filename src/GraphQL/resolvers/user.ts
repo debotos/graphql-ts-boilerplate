@@ -4,7 +4,7 @@ import { AuthenticationError, UserInputError } from 'apollo-server'
 
 import { isAdmin } from './middleware/authorization'
 
-const expiresTime = '60m'
+const expiresTime: string = process.env.JWT_TIMEOUT || '60m'
 
 const createToken = async (user: any, secret: string, expiresIn: string) => {
 	const { id, email, username, role } = user
@@ -28,12 +28,35 @@ export default {
 	},
 
 	Mutation: {
-		signUp: async (_: any, { username, email, password }: any, { models, jwtSecret }: any) => {
-			const user = await models.User.create({
-				username,
-				email,
-				password
-			})
+		signUp: async (
+			_: any,
+			{ username, email, password, role }: any,
+			{ models, jwtSecret }: any
+		) => {
+			interface signUpData {
+				username: string
+				email: string
+				password: string
+				role?: string
+			}
+			let newUser: signUpData = { username, email, password }
+			if (role) {
+				if (role === 'ADMIN' || role === 'PARTNER') {
+					if (process.env.ADMIN_MODE) {
+						/* Add 'ADMIN' or 'PARTNER' account only if ADMIN_MODE is active via env */
+						newUser['role'] = role
+					} else {
+						throw new UserInputError(`You are not permitted to create ${role} account.`)
+					}
+				} else if (role === 'CONSUMER') {
+					newUser['role'] = role
+				} else {
+					throw new UserInputError(
+						"Invalid role input. Must be one of ['ADMIN', 'PARTNER', 'CONSUMER']"
+					)
+				}
+			}
+			const user = await models.User.create(newUser)
 
 			return { token: createToken(user, jwtSecret, expiresTime) }
 		},

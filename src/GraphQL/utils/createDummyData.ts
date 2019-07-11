@@ -21,7 +21,7 @@ const createUsersWithMessages = async (models: any) => {
 			username: 'ripon',
 			email: 'ripondas49@gmail.com',
 			password: 'passmedeb',
-			role: 'ADMIN',
+			role: 'CONSUMER',
 			messages: [
 				{
 					text: 'Happy to see ...'

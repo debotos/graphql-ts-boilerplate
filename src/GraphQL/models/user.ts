@@ -11,15 +11,13 @@ const user = (sequelize: any, DataTypes: any) => {
 		},
 		username: {
 			type: DataTypes.STRING,
-			unique: true,
+			unique: { args: true, msg: 'Username is already taken.' },
 			allowNull: false,
-			validate: {
-				notEmpty: true
-			}
+			validate: { notEmpty: true }
 		},
 		email: {
 			type: DataTypes.STRING,
-			unique: true,
+			unique: { args: true, msg: 'Email already exist!' },
 			allowNull: false,
 			validate: {
 				notEmpty: true,
@@ -35,7 +33,16 @@ const user = (sequelize: any, DataTypes: any) => {
 			}
 		},
 		role: {
-			type: DataTypes.STRING
+			type: DataTypes.ENUM,
+			allowNull: false,
+			values: ['ADMIN', 'PARTNER', 'CONSUMER'],
+			defaultValue: 'CONSUMER',
+			validate: {
+				isIn: {
+					args: [['ADMIN', 'PARTNER', 'CONSUMER']], // check the value is one of these
+					msg: "Must be one of ['ADMIN', 'PARTNER', 'CONSUMER']"
+				}
+			}
 		}
 	})
 

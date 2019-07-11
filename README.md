@@ -12,6 +12,10 @@ Fill it with -
 # Set it to 'production' when deploying
 NODE_ENV=development
 PORT=5000
+# Set it to true to create a role: 'ADMIN' account else leave blank
+# Use it after hosting the app to create the first Admin account
+# Without this env variable no one can create admin account
+ADMIN_MODE=
 
 # leave it blank/empty if you don't want to use mongo DB
 USE_MONGO_DB=true
@@ -25,6 +29,7 @@ POSTGRES_DATABASE_PASSWORD=
 POSTGRES_DATABASE_URL=
 
 JWT_SECRET=mysupersecretkey
+JWT_TIMEOUT=60m
 ```
 
 Application will check for an 'x-token' key value pair in the HTTP header to consider as a Authenticate User.
