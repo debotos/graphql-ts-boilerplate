@@ -28,4 +28,26 @@ export const uploadOneImage = async (stream: any, path: string) => {
 	}
 }
 
+// For multiple file upload
+
+/*
+  import promisesAll from 'promises-all';
+
+  => In resolver.js
+  async multipleFileUpload(parent, {files}) {
+    const {resolve, reject} = await promisesAll.all(
+        files.map(processUpload)
+    );
+
+    if (reject.length) {
+        reject.forEach(
+            ({name, message}) => {
+                console.error(`${name}:${message}`)
+            }
+        )
+    }
+    return resolve;
+  },
+*/
+
 export default cloudinary

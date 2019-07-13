@@ -9,27 +9,48 @@ const user = (sequelize: any, DataTypes: any) => {
 			type: DataTypes.UUID,
 			defaultValue: DataTypes.UUIDV4
 		},
-		username: {
+		full_name: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate: {
+				len: { args: [3, 100], msg: 'Full name length min: 3 and max: 100' },
+				notEmpty: { args: true, msg: 'Full name is required.' }
+			}
+		},
+		user_name: {
 			type: DataTypes.STRING,
 			unique: { args: true, msg: 'Username is already taken.' },
 			allowNull: false,
-			validate: { notEmpty: true }
+			validate: {
+				len: { args: [3, 60], msg: 'Username length min: 3 and max: 60' },
+				notEmpty: { args: true, msg: 'Username is required.' }
+			}
 		},
 		email: {
 			type: DataTypes.STRING,
 			unique: { args: true, msg: 'Email already exist!' },
 			allowNull: false,
 			validate: {
-				notEmpty: true,
-				isEmail: true
+				len: { args: [3, 100], msg: 'Invalid email address.' },
+				notEmpty: { args: true, msg: 'Email is required.' },
+				isEmail: { args: true, msg: 'Invalid email address.' }
+			}
+		},
+		phone: {
+			type: DataTypes.STRING,
+			unique: { args: true, msg: 'Phone number belongs to someone else!' },
+			allowNull: false,
+			validate: {
+				len: { args: [11, 13], msg: 'Phone number length is invalid.' },
+				notEmpty: { args: true, msg: 'Phone number is required.' }
 			}
 		},
 		password: {
 			type: DataTypes.STRING,
 			allowNull: false,
 			validate: {
-				notEmpty: true,
-				len: [7, 42]
+				len: { args: [6, 42], msg: 'Passwords must be at least 6 characters long.' },
+				notEmpty: { args: true, msg: 'Password is required.' }
 			}
 		},
 		role: {
@@ -47,6 +68,30 @@ const user = (sequelize: any, DataTypes: any) => {
 		image: {
 			type: DataTypes.JSON,
 			allowNull: true
+		},
+		division: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate: {
+				len: { args: [3, 100], msg: 'Division length min: 3 and max: 100' },
+				notEmpty: { args: true, msg: 'Division is required.' }
+			}
+		},
+		region: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate: {
+				len: { args: [3, 100], msg: 'Region length min: 3 and max: 100' },
+				notEmpty: { args: true, msg: 'Region is required.' }
+			}
+		},
+		address: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate: {
+				len: { args: [3, 200], msg: 'Address length min: 3 and max: 200' },
+				notEmpty: { args: true, msg: 'Residence Address is required.' }
+			}
 		}
 	})
 
@@ -56,7 +101,7 @@ const user = (sequelize: any, DataTypes: any) => {
 
 	User.findByLogin = async (login: any) => {
 		let user = await User.findOne({
-			where: { username: login }
+			where: { user_name: login }
 		})
 
 		if (!user) {
