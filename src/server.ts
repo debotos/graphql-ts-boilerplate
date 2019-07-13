@@ -8,6 +8,7 @@ import models, { sequelize } from './GraphQL/models'
 import { createUsersWithMessages } from './GraphQL/utils/createDummyData'
 
 const PORT: Number = app.get('port')
+const HOST: string = process.env.HOST_URL || 'http://localhost'
 /* Change it to false in time of production or to make the data stable */
 const eraseDatabaseOnSync: boolean = true
 
@@ -17,8 +18,8 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
 		createUsersWithMessages(models) /* Generate dummey or initial data */
 	}
 	httpServer.listen(PORT, () => {
-		console.log(` 🚀  RESTful Server is up on http://localhost:${PORT}`)
-		console.log(` 🚀  GraphQL Server is on on http://localhost:${PORT}/graphql`)
+		console.log(` 🚀  RESTful Server is up on ${HOST}:${PORT}`)
+		console.log(` 🚀  GraphQL Server is on on ${HOST}:${PORT}/graphql`)
 		console.log(` ✔  Connected to Postgres Database`)
 	})
 })
